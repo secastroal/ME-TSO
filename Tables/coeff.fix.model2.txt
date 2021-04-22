@@ -1,0 +1,16 @@
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Wed Apr 21 22:56:11 2021
+\begin{table}[ht]
+\centering
+\caption{Variance Coefficients Across Fixed Situations} 
+\label{tab:coeff.fix}
+\begin{tabular}{lp{3cm}p{3cm}p{3cm}p{3cm}}
+  \hline
+ & Consistency of Traits & Specificity of Traits & Person-Situation Interaction Coefficient & Unique Situation Effect \\ 
+  \hline
+Energetic & 0.87 & 0.13 & 0.05 & 0.95 \\ 
+  Enthusiastic & 0.91 & 0.09 & 0.11 & 0.89 \\ 
+  Cheerful & 0.93 & 0.07 & 0.11 & 0.89 \\ 
+   \hline
+\end{tabular}
+\end{table}

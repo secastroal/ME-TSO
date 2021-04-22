@@ -1,0 +1,96 @@
+TITLE: TSO for positive affect activation items with random autoregressive effect and
+       social contact as a time-varying covariate.
+
+DATA: FILE = "Mplus/hgin.dat";
+VARIABLE: 
+NAMES = id days sex age relax energ enthu conte calm cheer event social optim; 
+MISSING =.;
+USEVAR = energ enthu cheer social;
+WITHIN = social;
+CLUSTER = id;
+LAGGED = social(1);
+TINTERVAL = days(0.25);
+
+ANALYSIS:
+TYPE = TWOLEVEL RANDOM;
+ESTIMATOR = BAYES;
+BITERATIONS = 20000(5000);
+PROCESSORS = 4;
+CHAINS = 4;
+THIN = 10;
+
+MODEL:
+
+%WITHIN%
+!Latent occasion specific variable
+paa BY energ@1 
+       enthu (lamb2)
+       cheer (&1 lamb3);
+
+!Random Autoregressive Effect and Coefficients
+ar | paa ON paa&1;
+s1 | energ ON social;
+s2 | enthu ON social;
+s3 | cheer ON social;
+social ON social&1@0;
+
+!Variances of the random measurement error and 
+!the latent state residual.
+energ(me1);
+enthu(me2);
+cheer(me3);
+paa(sred);
+
+%BETWEEN%
+!Latent trait-indicator variables
+theta1 by energ@1;  
+theta2 by enthu@1;  
+theta3 by cheer@1;
+
+!Person-situation interaction effects
+s1 ON theta1;
+s2 ON theta2;
+s3 ON theta3;
+
+!Fix 0 intercepts and estimate latent trait-indicator means.
+!Estimate random coefficients means
+[energ@0];  
+[enthu@0];  
+[cheer@0];  
+[theta1](int1);  
+[theta2](int2);  
+[theta3](int3);
+[ar];
+[s1];
+[s2];
+[s3];
+ 
+
+!Fix 0 between residual variance. Estimate latent trait-indicator
+!variances and random coefficients variances. 
+energ@0.001;
+enthu@0.001;
+cheer@0.001;
+theta1(tvar1);
+theta2(tvar2);
+theta3(tvar3);
+ar;
+s1;
+s2;
+s3;
+
+!Covariances
+theta1-theta3 WITH theta1-theta3 ar;
+
+!Residual Covariances
+s1-s3 WITH s1-s3
+
+SAVEDATA: BPARAMETERS = hgin_paa_2_alt_samples.dat;
+          FILE is hgin_paa_2_alt_fscores.dat;
+          SAVE = FSCORES (100 10);
+OUTPUT: TECH8;
+        !STANDARDIZED(CLUSTER);
+PLOT: TYPE = PLOT2;
+
+ 
+ 

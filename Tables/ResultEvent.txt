@@ -1,0 +1,27 @@
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Thu Apr 22 12:16:39 2021
+\begin{table}[ht]
+\centering
+\caption{Unstandardized Estimates of the Key Parameters of the Models using the Situation Variable Event} 
+\label{tab:event}
+\begin{tabular}{p{2.25in}cc}
+  \hline
+ & \mathcal{M}_{1} Est. [95\% C.I.] & \mathcal{M}_{1b} Est. [95\% C.I.] \\ 
+  \hline
+Eg-Ev Interaction Effect $\beta_{111}$ & -0.19 [-0.25,-0.13] & -0.19 [-0.26,-0.12] \\ 
+  En-Ev Interaction Effect $\beta_{121}$ & -0.2 [-0.26,-0.14] & -0.21 [-0.28,-0.14] \\ 
+  Ch-Ev Interaction Effect $\beta_{131}$ & -0.23 [-0.29,-0.17] & -0.24 [-0.31,-0.17] \\ 
+  Opt-Eg-Ev Interaction Effect $\beta_{211}$ &  & -0.02 [-0.26,0.21] \\ 
+  Opt-En-Ev Interaction Effect $\beta_{221}$ &  & 0.04 [-0.19,0.28] \\ 
+  Opt-Ch-Ev Interaction Effect $\beta_{231}$ &  & 0.04 [-0.22,0.29] \\ 
+  AR Effect Mean $E(\varphi)$ & 0.32 [0.3,0.34] & 0.32 [0.3,0.34] \\ 
+  Eg-Ev Effect Residual Variance $Var(\omega_{11})$ & 23.78 [15.05,34.05] & 23.92 [14.76,34.28] \\ 
+  En-Ev Effect Residual Variance $Var(\omega_{21})$ & 41.62 [31.06,54.34] & 41.98 [31.74,54.52] \\ 
+  Ch-Ev Effect Residual Variance $Var(\omega_{31})$ & 46.16 [34.97,59.47] & 46.19 [35,59.56] \\ 
+  AR Effect Variance $Var(\varphi)$ & 0.03 [0.03,0.04] & 0.03 [0.03,0.04] \\ 
+  Number of Free Parameters & 34 & 43 \\ 
+  DIC & 1823224.253 & 1825196.435 \\ 
+  pD & 141759.281 & 141883.547 \\ 
+   \hline
+\end{tabular}
+\end{table}

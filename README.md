@@ -9,6 +9,7 @@ This repository contains the code developed to do the empirical analyses of the 
 - **Mplus**
     - *Syntaxes*: Mplus input files of the models fitted for the empirical example.    
 - **R**: Personalized functions created for these analyses.
+
     -*esmfunctions.R*: Set of four functions useful to manipulate intensive longitudinal data. These functions will be included in the `esmpack` in a future release.
     - *metso.var.coeff.R*: Function to compute the variance coefficients (both across fixed situations and wihtin fixed situations) of the ME-TSO when there are no additional time-invariant covariates in the model. 
 - **Tables**: Text files with the tables in LaTeX format, which were created with the `xtable` package.

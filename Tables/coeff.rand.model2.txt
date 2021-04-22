@@ -1,0 +1,23 @@
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Wed Apr 21 22:56:37 2021
+\begin{table}[ht]
+\centering
+\caption{Variance Coefficients Across Random Situations} 
+\label{tab:coeff.rand}
+\begin{tabular}{lccc}
+  \hline
+Variance Coefficient & Energetic & Enthusiastic & Cheerful \\ 
+  \hline
+Reliability & 0.7 (0.01) & 0.84 (0.01) & 0.79 (0.01) \\ 
+  Consistency & 0.38 (0.03) & 0.43 (0.04) & 0.43 (0.03) \\ 
+  Occasion-Specificity & 0.32 (0.02) & 0.41 (0.03) & 0.36 (0.02) \\ 
+  Predictability by Trait & 0.33 (0.02) & 0.37 (0.02) & 0.37 (0.02) \\ 
+  Unpredictability by Trait & 0.05 (0.05) & 0.06 (0.06) & 0.06 (0.05) \\ 
+  Reliability & 0.7 (0.02) & 0.84 (0.01) & 0.78 (0.01) \\ 
+  Consistency & 0.38 (0.03) & 0.41 (0.04) & 0.41 (0.03) \\ 
+  Occasion-Specificity & 0.32 (0.02) & 0.43 (0.03) & 0.38 (0.02) \\ 
+  Predictability by Trait & 0.32 (0.02) & 0.34 (0.02) & 0.35 (0.02) \\ 
+  Unpredictability by Trait & 0.05 (0.05) & 0.07 (0.06) & 0.06 (0.05) \\ 
+   \hline
+\end{tabular}
+\end{table}
