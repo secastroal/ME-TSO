@@ -1,0 +1,1260 @@
+Mplus VERSION 8.4 (Linux)
+MUTHEN & MUTHEN
+04/19/2021   3:47 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: TSO for positive affect activation items with random autoregressive effect and
+         negative event as a time-varying covariate.
+
+  DATA: FILE = "Mplus/hgin.dat";
+  VARIABLE:
+  NAMES = id days sex age relax energ enthu conte calm cheer event social optim;
+  MISSING =.;
+  USEVAR = energ enthu cheer event;
+  WITHIN = event;
+  CLUSTER = id;
+  LAGGED = event(1);
+  TINTERVAL = days(0.25);
+
+  ANALYSIS:
+  TYPE = TWOLEVEL RANDOM;
+  ESTIMATOR = BAYES;
+  BITERATIONS = 20000(5000);
+  PROCESSORS = 4;
+  CHAINS = 4;
+  THIN = 10;
+
+  MODEL:
+
+  %WITHIN%
+  !Latent occasion specific variable
+  paa BY energ@1
+         enthu (lamb2)
+         cheer (&1 lamb3);
+
+  !Random Autoregressive Effect and Coefficients
+  ar | paa ON paa&1;
+  s1 | energ ON event;
+  s2 | enthu ON event;
+  s3 | cheer ON event;
+  event ON event&1@0;
+
+  !Variances of the random measurement error and
+  !the latent state residual.
+  energ(me1);
+  enthu(me2);
+  cheer(me3);
+  paa(sred);
+
+  %BETWEEN%
+  !Latent trait-indicator variables
+  theta1 by energ@1;
+  theta2 by enthu@1;
+  theta3 by cheer@1;
+
+  !Person-situation interaction effects
+  s1 ON theta1;
+  s2 ON theta2;
+  s3 ON theta3;
+
+  !Fix 0 intercepts and estimate latent trait-indicator means.
+  !Estimate random coefficients means
+  [energ@0];
+  [enthu@0];
+  [cheer@0];
+  [theta1](int1);
+  [theta2](int2);
+  [theta3](int3);
+  [ar];
+  [s1];
+  [s2];
+  [s3];
+
+  !Fix 0 between residual variance. Estimate latent trait-indicator
+  !variances and random coefficients variances.
+  energ@0.001;
+  enthu@0.001;
+  cheer@0.001;
+  theta1(tvar1);
+  theta2(tvar2);
+  theta3(tvar3);
+  ar;
+  s1;
+  s2;
+  s3;
+
+  !Covariances
+  theta1-theta3 WITH theta1-theta3 ar;
+
+  !Residual Covariances
+  s1-s3 WITH s1-s3
+
+  SAVEDATA: BPARAMETERS = hgin_paa_1_alt_samples.dat;
+            FILE is hgin_paa_1_alt_fscores.dat;
+            SAVE = FSCORES (100 10);
+  OUTPUT: TECH8;
+          !STANDARDIZED(CLUSTER);
+  PLOT: TYPE = PLOT2;
+
+
+
+
+
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      EVENT       114970 111562 112189 105718 109462 107515 112251 114999 114967 109083 114128
+                  111288 113260 113453 114983 110644 113597 114933 103463 113832 113099 112910
+                  100017 113418 100952 106870 111298 114591 113618 111409 101307 113821 113945
+                  112708 111309 112022 113203 109746 113752 114002 111983 114907 113042 111903
+                  101786 114323 109622 100398 113263 111514
+      EVENT&1     114970 111562 112189 105718 109462 107515 112251 114999 114967 109083 114128
+                  111288 113260 113453 114983 110644 113597 114933 103463 113832 113099 112910
+                  100017 113638 113418 100952 106870 111298 114591 113618 111409 101307 113821
+                  113945 112708 111309 112022 113203 109746 113752 114002 111983 114907 113042
+                  111903 101786 114323 109622 100398 113263 111514
+
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+TSO for positive affect activation items with random autoregressive effect and
+negative event as a time-varying covariate.
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                       53104
+
+Number of dependent variables                                    4
+Number of independent variables                                  1
+Number of continuous latent variables                            9
+
+Observed dependent variables
+
+  Continuous
+   ENERG       ENTHU       CHEER       EVENT
+
+Observed independent variables
+   EVENT&1
+
+Continuous latent variables
+   PAA         PAA&1       THETA1      THETA2      THETA3      AR
+   S1          S2          S3
+
+Variables with special functions
+
+  Cluster variable      ID
+
+  Within variables
+   EVENT       EVENT&1
+
+
+Estimator                                                    BAYES
+Specifications for Bayesian Estimation
+  Point estimate                                            MEDIAN
+  Number of Markov chain Monte Carlo (MCMC) chains               4
+  Random seed for the first chain                                0
+  Starting value information                           UNPERTURBED
+  Algorithm used for Markov chain Monte Carlo           GIBBS(PX1)
+  Convergence criterion                                  0.500D-01
+  Maximum number of iterations                               20000
+  K-th iteration used for thinning                              10
+Specifications for Bayes Factor Score Estimation
+  Number of imputed data sets                                  100
+  Iteration intervals for thinning                              10
+
+Input data file(s)
+  Mplus/hgin.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of clusters                        451
+
+       Size (s)    Cluster ID with Size s
+
+         96        115050
+         99        105607
+        104        114970
+        109        113441
+        110        114652
+        111        112834
+        112        111562 110159 114283 112977 103380
+        113        103917 112311 114222 112210 112148
+        114        112383 114918 113523 108074 111680 112189 115093
+        115        106097 107990 101449 113537 113914 111787
+        116        114027 112981 114776 114721 113602 113009 109754 104516
+                   107727 105718 102348 109462 113604 113987 111472 112212
+        117        111777 110374 113852 107515 111183 102434 104230 101329
+                   113502 105926 114777 112762 101748 112897 113520 107926
+                   108530 113267 114635 111263 113483 112251 115000 107902
+                   107109 108142 114999 114333 113818 113968 111225 110660
+                   111786 115021 105326 112253 113271 114610 111286 113998
+                   113043 112696 101703 112647 105818 114967 102958 113516
+                   111752 105692 109083 105775 114128 114858 111288 113918
+                   112882 106000 104220 111660 113833 113756 113260 113880
+                   110543
+        118        115124 105208 100566 101483 110284 102586 112031 109530
+                   114739 113507 114949 106232 111052 110798 113798 107038
+                   106347 108248 114627 107487 111491 102160 113196 112051
+                   114039 111487 111251 113934 111650 113453 102487 114559
+                   114983 113475 108210 114675 113264 113758 110644 110063
+                   113597 113173 111267 107080 112045 103112 114748 100023
+                   114778 102232 104228 114741 102167 114933 101917 114738
+                   110842 100309 114708 112171 103463 112702 113248 113832
+                   105232 111338 106972 112547 112634 105265 113099 114146
+                   105589 103435 114840 112910 100017 104824 111701 112684
+                   114729 113638 113418 100070 112036 113101 114813 111569
+                   110364 100952 106870 102438 110183 102407 111559 104582
+                   112908 100787 113708 114595 113857 111458 100425 114951
+                   111298 112354 114203 113532 112147 100001 113789 18
+                   114975 111012 114591 114011 111156 113309 111979 113618
+                   112861 102997 113557 111394 111412 113775 112182 100016
+                   111741 113899 102088 114385 109823 110328 111494 111966
+                   113919 113961 113332 114506 101553 114891 111848 104702
+                   112995 100080 107298 110151 114833 102700 107039 113053
+                   111754 106523 111744 112621 111203 114948 110278 101003
+                   113839 105881 103766 112983 111330 111469 104254 109910
+                   114977 103415 101912 105721 114549 111409 104227 114749
+                   115084 102103
+        119        106069 106318 111334 101251 113200 113240 110448 101307
+                   112477 112855 109750 111368 115007 111909 114545 105873
+                   109670 101938 113097 111335 108785 112887 108171 111710
+                   113821 113430 112259 107152 106098 104729 113945 111951
+                   113723 111250 112030 113534 112708 111309 114437 112097
+                   101725 112098 114522 114814 111186 104590 114658 105804
+                   112022 112027 113203 113090 114890 113847 113941 109746
+                   113752 111582 111230 111322 113334 100009 105443 114357
+                   112390 114002 111270 112857 112303 109446 113495 114687
+                   111591 115127 110659 111969 112790 112979 112243 111927
+                   111196 100813 111983 110641 110685 111490 114907 112146
+                   111542 111190 113776 113042 114552 107992 114201 114662
+                   115087 112540 114589 114736 100198 104647 111883 113096
+                   113514 114537 112406 113743 113187 114706 113192 109346
+                   111778 105889 111723 114613 108039 111527 112947 112135
+                   111903 114680 100020 100540 112301 111529 101786 105476
+                   114323 114789 106382 107421 111957 112885 114727 113504
+                   109622 103213 111938 101937 113707 103116 114100 100398
+                   102498 114644 105606 111302 113428 113263 111463 108977
+                   112023 111844 111514 104141 107172 110453 114428 113231
+                   103267 112843 112511
+
+
+
+SUMMARY OF MISSING DATA PATTERNS
+
+     Number of missing data patterns             4
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1  2  3  4
+ ENERG     x  x
+ ENTHU     x  x
+ CHEER     x  x
+ EVENT     x  x
+ EVENT&1   x     x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency     Pattern   Frequency     Pattern   Frequency
+          1       19462           3       13790
+          2       14241           4        5611
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              ENERG         ENTHU         CHEER         EVENT
+              ________      ________      ________      ________
+ ENERG          0.635
+ ENTHU          0.635         0.635
+ CHEER          0.635         0.635         0.635
+ EVENT          0.635         0.635         0.635         0.635
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     ENERG                50.638      -0.130       0.000    0.43%      31.000     44.040     50.000
+           33703.000     445.241      -0.724     100.000    0.26%      59.690     69.870
+     ENTHU                52.481      -0.250       0.000    0.68%      33.550     50.000     53.690
+           33703.000     433.141      -0.501     100.000    0.35%      60.960     70.810
+     CHEER                56.069      -0.327       0.000    0.47%      36.580     50.000     59.470
+           33703.000     428.023      -0.426     100.000    0.54%      64.320     73.960
+     EVENT                 0.062       3.628       0.000   93.79%       0.000      0.000      0.000
+           33703.000       0.058      11.161       1.000    6.21%       0.000      0.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+     USE THE FBITERATIONS OPTION TO INCREASE THE NUMBER OF ITERATIONS BY A FACTOR
+     OF AT LEAST TWO TO CHECK CONVERGENCE AND THAT THE PSR VALUE DOES NOT INCREASE.
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                              34
+
+Information Criteria
+
+          Deviance (DIC)                      1280670.221
+          Estimated Number of Parameters (pD)   99514.696
+
+
+
+MODEL RESULTS
+
+                                Posterior  One-Tailed         95% C.I.
+                    Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%  Significance
+
+Within Level
+
+ PAA      BY
+    ENERG              1.000       0.000      0.000       1.000       1.000
+    ENTHU              1.113       0.008      0.000       1.097       1.128      *
+    CHEER              1.027       0.008      0.000       1.012       1.042      *
+
+ EVENT      ON
+    EVENT&1            0.000       0.000      1.000       0.000       0.000
+
+ Intercepts
+    EVENT              0.062       0.001      0.000       0.060       0.065      *
+
+ Residual Variances
+    ENERG            139.050       1.382      0.000     136.372     141.821      *
+    ENTHU             71.443       1.184      0.000      69.144      73.801      *
+    CHEER             92.781       1.157      0.000      90.489      95.057      *
+    EVENT              0.058       0.000      0.000       0.057       0.059      *
+    PAA              148.420       2.086      0.000     144.331     152.599      *
+
+Between Level
+
+ THETA1   BY
+    ENERG              1.000       0.000      0.000       1.000       1.000
+
+ THETA2   BY
+    ENTHU              1.000       0.000      0.000       1.000       1.000
+
+ THETA3   BY
+    CHEER              1.000       0.000      0.000       1.000       1.000
+
+ S1         ON
+    THETA1            -0.150       0.038      0.000      -0.225      -0.075      *
+
+ S2         ON
+    THETA2            -0.170       0.037      0.000      -0.242      -0.099      *
+
+ S3         ON
+    THETA3            -0.235       0.038      0.000      -0.309      -0.160      *
+
+ THETA1   WITH
+    THETA2           121.057       9.118      0.000     104.636     140.148      *
+    THETA3           117.355       9.028      0.000     101.378     136.771      *
+    AR                 0.125       0.131      0.170      -0.131       0.386
+
+ THETA2   WITH
+    THETA3           126.445       9.470      0.000     109.525     146.417      *
+    AR                 0.069       0.135      0.308      -0.197       0.331
+
+ THETA3   WITH
+    AR                 0.115       0.134      0.195      -0.149       0.375
+
+ S1       WITH
+    S2                21.078       5.444      0.000      11.422      32.771      *
+    S3                22.201       5.562      0.000      12.305      34.013      *
+
+ S2       WITH
+    S3                38.598       6.621      0.000      26.852      52.688      *
+
+ Means
+    THETA1            51.242       0.548      0.000      50.178      52.330      *
+    THETA2            53.354       0.562      0.000      52.259      54.452      *
+    THETA3            57.120       0.569      0.000      56.010      58.229      *
+    AR                 0.293       0.011      0.000       0.270       0.314      *
+
+ Intercepts
+    ENERG              0.000       0.000      1.000       0.000       0.000
+    ENTHU              0.000       0.000      1.000       0.000       0.000
+    CHEER              0.000       0.000      1.000       0.000       0.000
+    S1                -1.742       2.002      0.194      -5.607       2.239
+    S2                -4.434       2.000      0.014      -8.326      -0.514      *
+    S3                -2.395       2.223      0.141      -6.735       1.983
+
+ Variances
+    THETA1           131.289       9.387      0.000     114.232     151.072      *
+    THETA2           138.583       9.886      0.000     120.829     159.478      *
+    THETA3           139.854       9.990      0.000     122.005     161.075      *
+    AR                 0.030       0.003      0.000       0.024       0.038      *
+
+ Residual Variances
+    ENERG              0.001       0.000      0.000       0.001       0.001
+    ENTHU              0.001       0.000      0.000       0.001       0.001
+    CHEER              0.001       0.000      0.000       0.001       0.001
+    S1                23.762       5.907      0.000      13.422      36.578      *
+    S2                35.720       6.891      0.000      23.656      50.672      *
+    S3                47.442       7.679      0.000      33.586      63.732      *
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              ENERG         ENTHU         CHEER         EVENT         EVENT&1
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           LAMBDA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+ EVENT              0             0             0             0             0
+ EVENT&1            0             0             0             0             0
+
+
+           LAMBDA
+              EVENT         EVENT&1
+              ________      ________
+ ENERG              0             0
+ ENTHU              0             0
+ CHEER              0             0
+ EVENT              0             0
+ EVENT&1            0             0
+
+
+           THETA
+              ENERG         ENTHU         CHEER         EVENT         EVENT&1
+              ________      ________      ________      ________      ________
+ ENERG              0
+ ENTHU              0             0
+ CHEER              0             0             0
+ EVENT              0             0             0             0
+ EVENT&1            0             0             0             0             0
+
+
+           ALPHA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           ALPHA
+              EVENT         EVENT&1
+              ________      ________
+                    1             0
+
+
+           BETA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ PAA                0             0             0             0             0
+ PAA&1              0             0             0             0             0
+ ENERG              0             0             0             0             0
+ ENTHU              2             0             0             0             0
+ CHEER              3             0             0             0             0
+ EVENT              0             0             0             0             0
+ EVENT&1            0             0             0             0             0
+
+
+           BETA
+              EVENT         EVENT&1
+              ________      ________
+ PAA                0             0
+ PAA&1              0             0
+ ENERG              0             0
+ ENTHU              0             0
+ CHEER              0             0
+ EVENT              0             0
+ EVENT&1            0             0
+
+
+           PSI
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ PAA                4
+ PAA&1              0             0
+ ENERG              0             0             5
+ ENTHU              0             0             0             6
+ CHEER              0             0             0             0             7
+ EVENT              0             0             0             0             0
+ EVENT&1            0             0             0             0             0
+
+
+           PSI
+              EVENT         EVENT&1
+              ________      ________
+ EVENT              8
+ EVENT&1            0             0
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN
+
+
+           NU
+              ENERG         ENTHU         CHEER
+              ________      ________      ________
+                    0             0             0
+
+
+           LAMBDA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+           LAMBDA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+           THETA
+              ENERG         ENTHU         CHEER
+              ________      ________      ________
+ ENERG              0
+ ENTHU              0             0
+ CHEER              0             0             0
+
+
+           ALPHA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+                    9            10            11            12            13
+
+
+           ALPHA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+                   14            15             0             0             0
+
+
+           BETA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ THETA1             0             0             0             0             0
+ THETA2             0             0             0             0             0
+ THETA3             0             0             0             0             0
+ AR                 0             0             0             0             0
+ S1                16             0             0             0             0
+ S2                 0            17             0             0             0
+ S3                 0             0            18             0             0
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+           BETA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ THETA1             0             0             0             0             0
+ THETA2             0             0             0             0             0
+ THETA3             0             0             0             0             0
+ AR                 0             0             0             0             0
+ S1                 0             0             0             0             0
+ S2                 0             0             0             0             0
+ S3                 0             0             0             0             0
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+           PSI
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ THETA1            19
+ THETA2            20            21
+ THETA3            22            23            24
+ AR                25            26            27            28
+ S1                 0             0             0             0            29
+ S2                 0             0             0             0            30
+ S3                 0             0             0             0            32
+ ENERG              0             0             0             0             0
+ ENTHU              0             0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+           PSI
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ S2                31
+ S3                33            34
+ ENERG              0             0             0
+ ENTHU              0             0             0             0
+ CHEER              0             0             0             0             0
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              ENERG         ENTHU         CHEER         EVENT         EVENT&1
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ ENERG          0.000         0.000         1.000         0.000         0.000
+ ENTHU          0.000         0.000         0.000         1.000         0.000
+ CHEER          0.000         0.000         0.000         0.000         1.000
+ EVENT          0.000         0.000         0.000         0.000         0.000
+ EVENT&1        0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              EVENT         EVENT&1
+              ________      ________
+ ENERG          0.000         0.000
+ ENTHU          0.000         0.000
+ CHEER          0.000         0.000
+ EVENT          1.000         0.000
+ EVENT&1        0.000         1.000
+
+
+           THETA
+              ENERG         ENTHU         CHEER         EVENT         EVENT&1
+              ________      ________      ________      ________      ________
+ ENERG          0.000
+ ENTHU          0.000         0.000
+ CHEER          0.000         0.000         0.000
+ EVENT          0.000         0.000         0.000         0.000
+ EVENT&1        0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              EVENT         EVENT&1
+              ________      ________
+                0.062         0.000
+
+
+           BETA
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ PAA            0.000         0.000         0.000         0.000         0.000
+ PAA&1          0.000         0.000         0.000         0.000         0.000
+ ENERG          1.000         0.000         0.000         0.000         0.000
+ ENTHU          1.000         0.000         0.000         0.000         0.000
+ CHEER          1.000         0.000         0.000         0.000         0.000
+ EVENT          0.000         0.000         0.000         0.000         0.000
+ EVENT&1        0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              EVENT         EVENT&1
+              ________      ________
+ PAA            0.000         0.000
+ PAA&1          0.000         0.000
+ ENERG          0.000         0.000
+ ENTHU          0.000         0.000
+ CHEER          0.000         0.000
+ EVENT          0.000         0.000
+ EVENT&1        0.000         0.000
+
+
+           PSI
+              PAA           PAA&1         ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ PAA            1.000
+ PAA&1          0.000         1.000
+ ENERG          0.000         0.000       222.621
+ ENTHU          0.000         0.000         0.000       216.570
+ CHEER          0.000         0.000         0.000         0.000       214.012
+ EVENT          0.000         0.000         0.000         0.000         0.000
+ EVENT&1        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              EVENT         EVENT&1
+              ________      ________
+ EVENT          0.029
+ EVENT&1        0.000         0.029
+
+
+     STARTING VALUES FOR BETWEEN
+
+
+           NU
+              ENERG         ENTHU         CHEER
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           LAMBDA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ ENERG          0.000         0.000         0.000         0.000         0.000
+ ENTHU          0.000         0.000         0.000         0.000         0.000
+ CHEER          0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ ENERG          0.000         0.000         1.000         0.000         0.000
+ ENTHU          0.000         0.000         0.000         1.000         0.000
+ CHEER          0.000         0.000         0.000         0.000         1.000
+
+
+           THETA
+              ENERG         ENTHU         CHEER
+              ________      ________      ________
+ ENERG          0.000
+ ENTHU          0.000         0.000
+ CHEER          0.000         0.000         0.000
+
+
+           ALPHA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ THETA1         0.000         0.000         0.000         0.000         0.000
+ THETA2         0.000         0.000         0.000         0.000         0.000
+ THETA3         0.000         0.000         0.000         0.000         0.000
+ AR             0.000         0.000         0.000         0.000         0.000
+ S1             0.000         0.000         0.000         0.000         0.000
+ S2             0.000         0.000         0.000         0.000         0.000
+ S3             0.000         0.000         0.000         0.000         0.000
+ ENERG          1.000         0.000         0.000         0.000         0.000
+ ENTHU          0.000         1.000         0.000         0.000         0.000
+ CHEER          0.000         0.000         1.000         0.000         0.000
+
+
+           BETA
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ THETA1         0.000         0.000         0.000         0.000         0.000
+ THETA2         0.000         0.000         0.000         0.000         0.000
+ THETA3         0.000         0.000         0.000         0.000         0.000
+ AR             0.000         0.000         0.000         0.000         0.000
+ S1             0.000         0.000         0.000         0.000         0.000
+ S2             0.000         0.000         0.000         0.000         0.000
+ S3             0.000         0.000         0.000         0.000         0.000
+ ENERG          0.000         0.000         0.000         0.000         0.000
+ ENTHU          0.000         0.000         0.000         0.000         0.000
+ CHEER          0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              THETA1        THETA2        THETA3        AR            S1
+              ________      ________      ________      ________      ________
+ THETA1         1.000
+ THETA2         0.000         1.000
+ THETA3         0.000         0.000         1.000
+ AR             0.000         0.000         0.000         1.000
+ S1             0.000         0.000         0.000         0.000         1.000
+ S2             0.000         0.000         0.000         0.000         0.000
+ S3             0.000         0.000         0.000         0.000         0.000
+ ENERG          0.000         0.000         0.000         0.000         0.000
+ ENTHU          0.000         0.000         0.000         0.000         0.000
+ CHEER          0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              S2            S3            ENERG         ENTHU         CHEER
+              ________      ________      ________      ________      ________
+ S2             1.000
+ S3             0.000         1.000
+ ENERG          0.000         0.000         0.001
+ ENTHU          0.000         0.000         0.000         0.001
+ CHEER          0.000         0.000         0.000         0.000         0.001
+
+
+
+     PRIORS FOR ALL PARAMETERS            PRIOR MEAN      PRIOR VARIANCE     PRIOR STD. DEV.
+
+     Parameter 1~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 2~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 3~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 4~IG(-1.000,0.000)          infinity            infinity            infinity
+     Parameter 5~IG(-1.000,0.000)          infinity            infinity            infinity
+     Parameter 6~IG(-1.000,0.000)          infinity            infinity            infinity
+     Parameter 7~IG(-1.000,0.000)          infinity            infinity            infinity
+     Parameter 8~IG(-1.000,0.000)          infinity            infinity            infinity
+     Parameter 9~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 10~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 11~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 12~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 13~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 14~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 15~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 16~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 17~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 18~N(0.000,infinity)          0.0000            infinity            infinity
+     Parameter 19~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 20~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 21~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 22~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 23~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 24~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 25~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 26~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 27~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 28~IW(0.000,-5)             infinity            infinity            infinity
+     Parameter 29~IW(0.000,-4)             infinity            infinity            infinity
+     Parameter 30~IW(0.000,-4)             infinity            infinity            infinity
+     Parameter 31~IW(0.000,-4)             infinity            infinity            infinity
+     Parameter 32~IW(0.000,-4)             infinity            infinity            infinity
+     Parameter 33~IW(0.000,-4)             infinity            infinity            infinity
+     Parameter 34~IW(0.000,-4)             infinity            infinity            infinity
+
+
+TECHNICAL 8 OUTPUT
+
+
+   TECHNICAL 8 OUTPUT FOR BAYES ESTIMATION
+
+     CHAIN    BSEED
+     1        0
+     2        285380
+     3        253358
+     4        93468
+
+                     POTENTIAL       PARAMETER WITH
+     ITERATION    SCALE REDUCTION      HIGHEST PSR
+     100              1.053               31
+     200              1.016               21
+     300              1.043               31
+     400              1.017               32
+     500              1.014               32
+     600              1.009               32
+     700              1.025               30
+     800              1.019               30
+     900              1.014               32
+     1000             1.013               30
+     1100             1.004               30
+     1200             1.003               33
+     1300             1.001               33
+     1400             1.002               33
+     1500             1.003               33
+     1600             1.004               32
+     1700             1.006               32
+     1800             1.004               32
+     1900             1.006               32
+     2000             1.003               32
+     2100             1.004               31
+     2200             1.005               31
+     2300             1.006               31
+     2400             1.006               31
+     2500             1.006               31
+     2600             1.005               31
+     2700             1.007               31
+     2800             1.006               31
+     2900             1.006               31
+     3000             1.004               31
+     3100             1.004               31
+     3200             1.004               31
+     3300             1.003               31
+     3400             1.004               29
+     3500             1.003               29
+     3600             1.003               29
+     3700             1.002               29
+     3800             1.001               29
+     3900             1.002               29
+     4000             1.002               29
+     4100             1.002               29
+     4200             1.002               29
+     4300             1.001               4
+     4400             1.001               2
+     4500             1.001               29
+     4600             1.001               2
+     4700             1.001               29
+     4800             1.001               29
+     4900             1.001               29
+     5000             1.001               29
+
+
+SUMMARIES OF PLAUSIBLE VALUES (N = NUMBER OF OBSERVATIONS * NUMBER OF IMPUTATIONS)
+
+
+     SAMPLE STATISTICS
+
+
+           Means
+              PAA           PAA&1         THETA1        THETA2        THETA3
+              ________      ________      ________      ________      ________
+               -0.007         0.006        51.247        53.365        57.129
+
+
+           Means
+              AR            S1            S2            S3            B_ENERG
+              ________      ________      ________      ________      ________
+                0.293        -9.425       -13.536       -15.805        51.247
+
+
+           Means
+              B_ENTHU       B_CHEER
+              ________      ________
+               53.365        57.129
+
+
+           Covariances
+              PAA           PAA&1         THETA1        THETA2        THETA3
+              ________      ________      ________      ________      ________
+ PAA          171.563
+ PAA&1         54.752       170.083
+ THETA1        -0.106        -0.176       128.483
+ THETA2        -0.108        -0.197       118.540       135.665
+ THETA3        -0.151        -0.241       114.859       123.741       136.672
+ AR            -0.001        -0.002         0.122         0.067         0.111
+ S1             0.020         0.011       -19.391       -17.161       -17.820
+ S2             0.073         0.079       -19.274       -21.588       -22.089
+ S3             0.072         0.077       -25.768       -27.198       -33.126
+ B_ENERG       -0.106        -0.176       128.480       118.537       114.856
+ B_ENTHU       -0.108        -0.197       118.539       135.665       123.740
+ B_CHEER       -0.152        -0.241       114.861       123.743       136.670
+
+
+           Covariances
+              AR            S1            S2            S3            B_ENERG
+              ________      ________      ________      ________      ________
+ AR             0.030
+ S1            -0.018        28.605
+ S2            -0.016        25.028        39.787
+ S3            -0.024        27.734        44.178        56.663
+ B_ENERG        0.122       -19.392       -19.277       -25.770       128.478
+ B_ENTHU        0.067       -17.160       -21.586       -27.196       118.537
+ B_CHEER        0.111       -17.821       -22.089       -33.126       114.858
+
+
+           Covariances
+              B_ENTHU       B_CHEER
+              ________      ________
+ B_ENTHU      135.665
+ B_CHEER      123.742       136.670
+
+
+           Correlations
+              PAA           PAA&1         THETA1        THETA2        THETA3
+              ________      ________      ________      ________      ________
+ PAA            1.000
+ PAA&1          0.321         1.000
+ THETA1        -0.001        -0.001         1.000
+ THETA2        -0.001        -0.001         0.898         1.000
+ THETA3        -0.001        -0.002         0.867         0.909         1.000
+ AR             0.000        -0.001         0.063         0.033         0.055
+ S1             0.000         0.000        -0.320        -0.275        -0.285
+ S2             0.001         0.001        -0.270        -0.294        -0.300
+ S3             0.001         0.001        -0.302        -0.310        -0.376
+ B_ENERG       -0.001        -0.001         1.000         0.898         0.867
+ B_ENTHU       -0.001        -0.001         0.898         1.000         0.909
+ B_CHEER       -0.001        -0.002         0.867         0.909         1.000
+
+
+           Correlations
+              AR            S1            S2            S3            B_ENERG
+              ________      ________      ________      ________      ________
+ AR             1.000
+ S1            -0.020         1.000
+ S2            -0.015         0.742         1.000
+ S3            -0.019         0.689         0.930         1.000
+ B_ENERG        0.063        -0.320        -0.270        -0.302         1.000
+ B_ENTHU        0.033        -0.275        -0.294        -0.310         0.898
+ B_CHEER        0.055        -0.285        -0.300        -0.376         0.867
+
+
+           Correlations
+              B_ENTHU       B_CHEER
+              ________      ________
+ B_ENTHU        1.000
+ B_CHEER        0.909         1.000
+
+
+SUMMARY OF PLAUSIBLE STANDARD DEVIATION (N = NUMBER OF OBSERVATIONS)
+
+
+     SAMPLE STATISTICS
+
+
+           Means
+              PAA_SD        PAA&1_SD      THETA1_S      THETA2_S      THETA3_S
+              ________      ________      ________      ________      ________
+                7.740         7.716         2.317         2.315         2.243
+
+
+           Means
+              AR_SD         S1_SD         S2_SD         S3_SD         B_ENERG_
+              ________      ________      ________      ________      ________
+                0.114         4.393         4.800         5.442         2.317
+
+
+           Means
+              B_ENTHU_      B_CHEER_
+              ________      ________
+                2.315         2.243
+
+
+           Covariances
+              PAA_SD        PAA&1_SD      THETA1_S      THETA2_S      THETA3_S
+              ________      ________      ________      ________      ________
+ PAA_SD        11.605
+ PAA&1_SD      -0.684        11.795
+ THETA1_S       0.075         0.075         0.128
+ THETA2_S       0.075         0.075         0.135         0.171
+ THETA3_S       0.079         0.078         0.126         0.152         0.152
+ AR_SD          0.002         0.002        -0.003        -0.003        -0.003
+ S1_SD          0.022         0.022        -0.009        -0.006        -0.015
+ S2_SD          0.026         0.026        -0.009        -0.008        -0.016
+ S3_SD          0.026         0.026        -0.017        -0.014        -0.024
+ B_ENERG_       0.075         0.075         0.128         0.135         0.126
+ B_ENTHU_       0.076         0.075         0.135         0.171         0.152
+ B_CHEER_       0.079         0.078         0.126         0.152         0.152
+
+
+           Covariances
+              AR_SD         S1_SD         S2_SD         S3_SD         B_ENERG_
+              ________      ________      ________      ________      ________
+ AR_SD          0.000
+ S1_SD          0.000         0.313
+ S2_SD          0.000         0.386         0.645
+ S3_SD          0.001         0.470         0.776         0.995
+ B_ENERG_      -0.003        -0.008        -0.009        -0.017         0.128
+ B_ENTHU_      -0.003        -0.007        -0.008        -0.014         0.135
+ B_CHEER_      -0.003        -0.015        -0.016        -0.024         0.126
+
+
+           Covariances
+              B_ENTHU_      B_CHEER_
+              ________      ________
+ B_ENTHU_       0.171
+ B_CHEER_       0.152         0.152
+
+
+           Correlations
+              PAA_SD        PAA&1_SD      THETA1_S      THETA2_S      THETA3_S
+              ________      ________      ________      ________      ________
+ PAA_SD         1.000
+ PAA&1_SD      -0.058         1.000
+ THETA1_S       0.062         0.061         1.000
+ THETA2_S       0.054         0.053         0.911         1.000
+ THETA3_S       0.059         0.058         0.899         0.943         1.000
+ AR_SD          0.030         0.030        -0.443        -0.488        -0.455
+ S1_SD          0.011         0.011        -0.043        -0.028        -0.066
+ S2_SD          0.009         0.009        -0.032        -0.023        -0.051
+ S3_SD          0.008         0.008        -0.048        -0.033        -0.061
+ B_ENERG_       0.062         0.061         1.000         0.911         0.899
+ B_ENTHU_       0.054         0.053         0.911         1.000         0.943
+ B_CHEER_       0.059         0.058         0.899         0.943         1.000
+
+
+           Correlations
+              AR_SD         S1_SD         S2_SD         S3_SD         B_ENERG_
+              ________      ________      ________      ________      ________
+ AR_SD          1.000
+ S1_SD          0.042         1.000
+ S2_SD          0.037         0.861         1.000
+ S3_SD          0.047         0.843         0.970         1.000
+ B_ENERG_      -0.443        -0.042        -0.032        -0.048         1.000
+ B_ENTHU_      -0.488        -0.029        -0.023        -0.033         0.911
+ B_CHEER_      -0.455        -0.067        -0.052        -0.061         0.899
+
+
+           Correlations
+              B_ENTHU_      B_CHEER_
+              ________      ________
+ B_ENTHU_       1.000
+ B_CHEER_       0.943         1.000
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Bayesian posterior parameter distributions
+  Bayesian posterior parameter trace plots
+  Bayesian autocorrelation plots
+
+SAVEDATA INFORMATION
+
+
+  Save file
+    hgin_paa_1_alt_fscores.dat
+
+  Order and format of variables
+
+    ENERG                            F10.3
+    ENTHU                            F10.3
+    CHEER                            F10.3
+    EVENT                            F10.3
+    EVENT&1                          F10.3
+    PAA Mean                         F10.3
+    PAA Median                       F10.3
+    PAA Standard Deviation           F10.3
+    PAA 2.5% Value                   F10.3
+    PAA 97.5% Value                  F10.3
+    PAA&1 Mean                       F10.3
+    PAA&1 Median                     F10.3
+    PAA&1 Standard Deviation         F10.3
+    PAA&1 2.5% Value                 F10.3
+    PAA&1 97.5% Value                F10.3
+    THETA1 Mean                      F10.3
+    THETA1 Median                    F10.3
+    THETA1 Standard Deviation        F10.3
+    THETA1 2.5% Value                F10.3
+    THETA1 97.5% Value               F10.3
+    THETA2 Mean                      F10.3
+    THETA2 Median                    F10.3
+    THETA2 Standard Deviation        F10.3
+    THETA2 2.5% Value                F10.3
+    THETA2 97.5% Value               F10.3
+    THETA3 Mean                      F10.3
+    THETA3 Median                    F10.3
+    THETA3 Standard Deviation        F10.3
+    THETA3 2.5% Value                F10.3
+    THETA3 97.5% Value               F10.3
+    AR Mean                          F10.3
+    AR Median                        F10.3
+    AR Standard Deviation            F10.3
+    AR 2.5% Value                    F10.3
+    AR 97.5% Value                   F10.3
+    S1 Mean                          F10.3
+    S1 Median                        F10.3
+    S1 Standard Deviation            F10.3
+    S1 2.5% Value                    F10.3
+    S1 97.5% Value                   F10.3
+    S2 Mean                          F10.3
+    S2 Median                        F10.3
+    S2 Standard Deviation            F10.3
+    S2 2.5% Value                    F10.3
+    S2 97.5% Value                   F10.3
+    S3 Mean                          F10.3
+    S3 Median                        F10.3
+    S3 Standard Deviation            F10.3
+    S3 2.5% Value                    F10.3
+    S3 97.5% Value                   F10.3
+    B_ENERG Mean                     F10.3
+    B_ENERG Median                   F10.3
+    B_ENERG Standard Deviation       F10.3
+    B_ENERG 2.5% Value               F10.3
+    B_ENERG 97.5% Value              F10.3
+    B_ENTHU Mean                     F10.3
+    B_ENTHU Median                   F10.3
+    B_ENTHU Standard Deviation       F10.3
+    B_ENTHU 2.5% Value               F10.3
+    B_ENTHU 97.5% Value              F10.3
+    B_CHEER Mean                     F10.3
+    B_CHEER Median                   F10.3
+    B_CHEER Standard Deviation       F10.3
+    B_CHEER 2.5% Value               F10.3
+    B_CHEER 97.5% Value              F10.3
+    ID                               I7
+    _TIMEPOINT                       I4
+
+  Save file format
+    65F10.3 I7 I4
+
+  Save file record length    10000
+
+
+  Bayesian Parameters
+
+  Save file
+    hgin_paa_1_alt_samples.dat
+  Save format      Free
+
+  Order of parameters saved
+
+    Chain number
+    Iteration number
+    Parameter 1, %WITHIN%: [ EVENT ]
+    Parameter 2, %WITHIN%: ENTHU ON PAA (equality/label)
+    Parameter 3, %WITHIN%: CHEER ON PAA (equality/label)
+    Parameter 4, %WITHIN%: PAA (equality/label)
+    Parameter 5, %WITHIN%: ENERG (equality/label)
+    Parameter 6, %WITHIN%: ENTHU (equality/label)
+    Parameter 7, %WITHIN%: CHEER (equality/label)
+    Parameter 8, %WITHIN%: EVENT
+    Parameter 9, %BETWEEN%: [ THETA1 ] (equality/label)
+    Parameter 10, %BETWEEN%: [ THETA2 ] (equality/label)
+    Parameter 11, %BETWEEN%: [ THETA3 ] (equality/label)
+    Parameter 12, %BETWEEN%: [ AR ]
+    Parameter 13, %BETWEEN%: [ S1 ]
+    Parameter 14, %BETWEEN%: [ S2 ]
+    Parameter 15, %BETWEEN%: [ S3 ]
+    Parameter 16, %BETWEEN%: S1 ON THETA1
+    Parameter 17, %BETWEEN%: S2 ON THETA2
+    Parameter 18, %BETWEEN%: S3 ON THETA3
+    Parameter 19, %BETWEEN%: THETA1 (equality/label)
+    Parameter 20, %BETWEEN%: THETA2 WITH THETA1
+    Parameter 21, %BETWEEN%: THETA2 (equality/label)
+    Parameter 22, %BETWEEN%: THETA3 WITH THETA1
+    Parameter 23, %BETWEEN%: THETA3 WITH THETA2
+    Parameter 24, %BETWEEN%: THETA3 (equality/label)
+    Parameter 25, %BETWEEN%: AR WITH THETA1
+    Parameter 26, %BETWEEN%: AR WITH THETA2
+    Parameter 27, %BETWEEN%: AR WITH THETA3
+    Parameter 28, %BETWEEN%: AR
+    Parameter 29, %BETWEEN%: S1
+    Parameter 30, %BETWEEN%: S2 WITH S1
+    Parameter 31, %BETWEEN%: S2
+    Parameter 32, %BETWEEN%: S3 WITH S1
+    Parameter 33, %BETWEEN%: S3 WITH S2
+    Parameter 34, %BETWEEN%: S3
+
+    Convergence iterations 1-5000
+    Factor score imputations iterations 5001-5100
+
+     Beginning Time:  15:47:16
+        Ending Time:  18:00:38
+       Elapsed Time:  02:13:22
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

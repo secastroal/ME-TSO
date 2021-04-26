@@ -34,6 +34,10 @@ ar | paa ON paa&1;
 s1 | energ ON social;
 s2 | enthu ON social;
 s3 | cheer ON social;
+!When using the TINTERVAL command, Mplus tries to handle all 
+!within-level variables as dependent variables. For this reason,
+!to use within-level covariates, we need to trick Mplus by 
+!regressing the covariate on itself and fixing the effect to 0.
 social ON social&1@0;
 
 !Variances of the random measurement error and 
@@ -92,7 +96,6 @@ SAVEDATA: BPARAMETERS = hgin_paa_2b_alt_samples.dat;
           FILE is hgin_paa_2b_alt_fscores.dat;
           SAVE = FSCORES (100 10);
 OUTPUT: TECH8;
-        !STANDARDIZED(CLUSTER);
 PLOT: TYPE = PLOT2;
 
  
